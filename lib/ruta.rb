@@ -1,6 +1,9 @@
 
 
 if RUBY_ENGINE == 'opal'
+  require 'browser'
+  require 'browser/history'
+
   require 'ruta_history'
   require 'ruta_dsl'
   require 'ruta_context'
