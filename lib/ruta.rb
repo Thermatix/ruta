@@ -5,11 +5,11 @@ if RUBY_ENGINE == 'opal'
   require 'browser/history'
 
   require 'ruta_context'
-  require 'ruta_dsl'
   require 'ruta_handler'
   require 'ruta_history'
-  require 'ruta_router'
   require 'ruta_routes'
+  require 'ruta_dsl'
+  require 'ruta_router'
   require 'ruta_version'
 
 else
@@ -31,6 +31,15 @@ module Ruta
       r = Router.route(ref,params)
       History.add_to_history r[:path], r[:flags][:page_name],d
       Router.get_handler_for get_fragment
+    end
+
+    def start_app
+      Dom {
+        Context.collection[Router.current_context].elements.each do |element|
+          div.
+        end
+      }.append_to($document.body)
+
     end
   end
 end
