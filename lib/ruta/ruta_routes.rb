@@ -7,7 +7,7 @@ module Ruta
       def add ref, route,context, flags
         @collection||= {}
         @collection[contex]||= {}
-        @collection[context][ref] = {re:route,handle: flags.delete(:to),flags: flags}
+        @collection[context][ref] = {path:route,handle: flags.delete(:to),flags: flags}
       end
 
       def remove ref
@@ -19,8 +19,11 @@ module Ruta
       end
 
       def get_and_paramaterize ref,*params
-        segments = `#{get(ref)}.split('/')`
-        '/' + segments.map { |item| item[0] == ':' ? params.shift : item }.join('/') + '/'
+        route = get(ref).dup
+        segments = `#{route[:path]}.split('/')`
+        path = '/' + segments.map { |item| item[0] == ':' ? params.shift : item }.join('/') + '/'
+        route[:path] = path
+        route
       end
 
     end
