@@ -2,62 +2,28 @@ module Ruta
   class Routes
 
     class << self
-      attr_accessor :pointer, :tree, :refs
-      def create ref, route, flags
-        self.pointer = []
-        segments = `#{route}.split('/')`
-        attach_to_tree segments,flags
-        self.refs[ref] = self.pointer.dup
+      # TODO allow sub-contextes to be mapable
+      attr_reader :collection
+      def add ref, route,context, flags
+        @collection||= {}
+        @collection[contex]||= {}
+        @collection[context][ref] = {re:route,handle: flags.delete(:to),flags: flags}
       end
 
-      private
-
-      def attach_to_tree segments,flags
-        segments.each do |segment|
-          create_section_at_pos
-          set_pos segment, {
-            type: segment_type(segment),
-            flags: flag
-          }
-          self.pointer << segment
-        end
+      def remove ref
+        @collection.delete(ref)
       end
 
-      def segment_type segment
-        (@segment_types|| = {
-          ':' => :param,
-          '#' => :fragment
-        })[segment[0]] || :standard
+      def get ref
+        @collection[ref]
       end
 
-      def get_pos
-        pos
+      def get_and_paramaterize ref,*params
+        segments = `#{get(ref)}.split('/')`
+        '/' + segments.map { |item| item[0] == ':' ? params.shift : item }.join('/') + '/'
       end
 
-      def set_pos key,value
-        pos[key] = value
-      end
-
-      def pos
-        if self.tree.empty?
-          self.tree
-        else
-          self.pointer.inject(self.tree) do |tree,pos|
-            tree[pos]
-          end
-        end
-      end
-
-      def create_section_at_pos
-        self.pointer.inject(self.tree) do |tree,pos|
-          tree[pos] = {} unless tree[pos]
-          tree[pos]
-        end
-      end
     end
-
-    self.tree = {}
-    self.refs = {}
 
   end
 end

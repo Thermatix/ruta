@@ -108,17 +108,13 @@ module Ruta
       end
 
       def map key,route, options={}
-        # @routes[current_context] = {
-        #   key: {
-        #     route: Route.new(route),
-        #     to: options.fetch(:to)
-        #   }
-        # }
-        Routes.create(ref,route,options)
+        raise "no handler present, please add one using 'to:'" unless options[:to]
+        raise "no context for given route" unless @current_context
+        Routes.add(ref,route,@current_context,options)
       end
 
       def root context
-        @inital_context = context
+        Router.set_initial context
       end
 
 
