@@ -33,6 +33,10 @@ module Ruta
       def define context_name, &block
         @collection[context_name] = new(block)
       end
+
+      def render context
+        
+      end
     end
     @collection = {}
   end

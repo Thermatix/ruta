@@ -10,7 +10,7 @@ module Ruta
       instance_exec &block
     end
 
-    def using_context context
+    def for_context context
       @current_context = context
       yield
       @current_context = ""
@@ -65,14 +65,14 @@ module Ruta
       def current_uri
        Window.location.uri
       end
-
+      # TODO need to see if this works, a it's based on pure JS
       def get_handler_for fragment
         Routes.collection[current_context].each do |ref,route|
           # match = `#{fragment}.match(#{route[:re]})`
           match = fragment.match route[:re]
           if match
             url = match.shift
-            Context.collection[@current_context].handlers[route[:handle]].call match,url
+            [Context.collection[@current_context].handlers[route[:handle]]].flatten.(&:call, match,url)
           end
         end
       end

@@ -8,7 +8,6 @@ if RUBY_ENGINE == 'opal'
   require 'ruta_handler'
   require 'ruta_history'
   require 'ruta_routes'
-  require 'ruta_dsl'
   require 'ruta_router'
   require 'ruta_version'
 
