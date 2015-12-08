@@ -6,8 +6,8 @@ module Ruta
       attr_reader :collection
       def add ref, route,context, flags
         @collection||= {}
-        @collection[contex]||= {}
-        @collection[context][ref] = {path:route,handle: flags.delete(:to),flags: flags}
+        create_section_for context
+        pos[ref] = {path:route,handle: flags.delete(:to),flags: flags}
       end
 
       def remove ref
@@ -24,6 +24,24 @@ module Ruta
         path = '/' + segments.map { |item| item[0] == ':' ? params.shift : item }.join('/') + '/'
         route[:path] = path
         route
+      end
+
+      private
+      def pos pointer
+        if @collection.empty?
+          @collection
+        else
+          pointer.inject(@collection) do |tree,pos|
+            tree[pos]
+          end
+        end
+      end
+
+      def create_section_for pointer
+        pointer.inject(@collection) do |tree,pos|
+          tree[pos] = {} unless tree[pos]
+          tree[pos]
+        end
       end
 
     end

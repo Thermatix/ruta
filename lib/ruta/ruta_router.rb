@@ -2,22 +2,22 @@
 module Ruta
 
   class Router
-
+    # TODO: ensure sub-context routes are mounted into parent context routes
+    # re-build route matching
     attr_accessor :current_context, :inital_context, :routes
     def initialize &block
-      @current_context = ""
+      @current_context = []
       @routes = {}
       instance_exec &block
     end
 
     def for_context context
-      @current_context = context
+      @current_context << context
       yield
-      @current_context = ""
+      @current_context.pop
     end
 
     def map key,route, options={}
-      raise "no handler present, please add one using 'to:'" unless options[:to]
       Routes.add(ref,route,@current_context || :no_context ,options)
     end
 

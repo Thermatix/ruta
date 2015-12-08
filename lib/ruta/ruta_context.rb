@@ -47,7 +47,7 @@ module Ruta
         render_context_elements context_to_render, this
         render_element_contents context_to_render,context
       end
-
+      private
       def render_context_elements context_to_render,this
         context_to_render.elements.each do |element_name,details|
           Dom {
