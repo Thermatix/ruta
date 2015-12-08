@@ -18,7 +18,7 @@ module Ruta
     end
 
     def map key,route, options={}
-      Routes.add(ref,route,@current_context || :no_context ,options)
+      Routes.add(ref,route,@current_context || [:no_context] ,options)
     end
 
     def root context
