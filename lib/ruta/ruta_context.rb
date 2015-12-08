@@ -34,7 +34,7 @@ module Ruta
         @collection[context_name] = new(block)
       end
 
-      def wipe element
+      def wipe element=nil
         if element
           $document[element].clear
         else

@@ -70,8 +70,15 @@ module Ruta
           # match = `#{fragment}.match(#{route[:re]})`
           match = fragment.match route[:re]
           if match
+            if route[:handle]
             url = match.shift
             [Context.collection[@current_context].handlers[route[:handle]]].flatten.(&:call, match,url)
+            elsif route[:context]
+              Context.wipe 
+              Context.render(route[:Context])
+            else
+              raise "trying to render non rendarable route(#{ref}) for fragment(#{fragment})"
+            end
           end
         end
       end

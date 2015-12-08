@@ -14,16 +14,8 @@ module Ruta
     end
 
     # TODO:Move these functions to execution context?
-    def switch_context_to context
-      context_render_for context
-    end
-
     def switch_sub_context_to context
-      context_render_for context,@handler_name
-    end
-
-    def context_render_for context, element=nil
-      Context.wipe element
+      Context.wipe @handler_name
       Context.render context
     end
 
