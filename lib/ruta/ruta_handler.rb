@@ -1,4 +1,3 @@
-# handles url changes
 module Ruta
   class Handler
 

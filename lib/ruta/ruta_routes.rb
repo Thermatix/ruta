@@ -7,12 +7,7 @@ module Ruta
       def add ref, route,context, flags
         @collection||= {}
         create_section_for context
-        pos[ref] = {path:route,flags: flags}
-        if flags[:to]
-          pos[ref].merge({handle: flags.delete(:to)})
-        elsif flags[:context]
-          pos[ref].merge({context: flags.delete(:context)})
-        end
+        pos[ref] = Route.new(route,flags)
       end
 
       def remove ref

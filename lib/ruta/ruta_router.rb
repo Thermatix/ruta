@@ -2,6 +2,8 @@
 module Ruta
 
   class Router
+
+    
     # TODO: ensure sub-context routes are mounted into parent context routes
     # re-build route matching
     attr_accessor :current_context, :inital_context, :routes
@@ -74,13 +76,17 @@ module Ruta
             url = match.shift
             [Context.collection[@current_context].handlers[route[:handle]]].flatten.(&:call, match,url)
             elsif route[:context]
-              Context.wipe 
+              Context.wipe
               Context.render(route[:Context])
             else
               raise "trying to render non rendarable route(#{ref}) for fragment(#{fragment})"
             end
           end
         end
+      end
+
+      def match
+
       end
 
     end

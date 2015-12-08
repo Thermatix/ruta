@@ -6,8 +6,8 @@ require 'ruta/ruta_version'
 Gem::Specification.new do |spec|
   spec.name          = "ruta"
   spec.version       = Ruta::VERSION
-  spec.authors       = ["Martin Becker"]
-  spec.email         = ["mbeckerwork@gmail.com"]
+  spec.authors       = ["Martin Becker",'Adam Beynon']
+  spec.email         = ["mbeckerwork@gmail.com",'adam.beynon@gmail.com']
 
   spec.summary       = %q{Front end agnostic router built in opal}
   spec.homepage      = "https://github.com/Thermatix/ruta"
