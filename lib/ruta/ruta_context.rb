@@ -11,17 +11,18 @@ module Ruta
     end
 
     def element element_name,element_attribs, &block
-      self.elements[element_name] = {
-        attributes: element_attribs,
-        content: block
+        self.elements[element_name] = {
+          attributes: element_attribs,
+          content: block
+        }
+    end
+
+    def sub_context ref, context
+      self.elements[ref] = {
+        content: Proc.new(context,{|context|Context.render context,context})
       }
     end
 
-
-    # TODO:Move these functions to execution context?
-    def context context_name
-      context_name
-    end
 
     class << self
       attr_reader :collection, :render
@@ -58,7 +59,7 @@ module Ruta
 
       def render_element_contents context_to_render,context
         context_to_render.elements.each do |element_name,details|
-          object = details.content.call
+          object = details[:content].call
           if object.class == Symbol
             render object,$document[context]
           else
