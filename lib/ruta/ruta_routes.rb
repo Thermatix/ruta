@@ -7,23 +7,15 @@ module Ruta
       def add ref, route,context, flags
         @collection||= {}
         create_section_for context
-        pos[ref] = Route.new(route,flags)
+        pos(context)[ref] = Route.new(route,flags)
       end
 
-      def remove ref
-        @collection.delete(ref)
+      def remove context, ref
+        pos(context).delete(ref)
       end
 
-      def get ref
-        @collection[ref]
-      end
-
-      def get_and_paramaterize ref,*params
-        route = get(ref).dup
-        segments = `#{route[:path]}.split('/')`
-        path = '/' + segments.map { |item| item[0] == ':' ? params.shift : item }.join('/') + '/'
-        route[:path] = path
-        route
+      def get context, ref
+        pos(context)[ref]
       end
 
       private
