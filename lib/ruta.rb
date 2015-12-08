@@ -33,12 +33,7 @@ module Ruta
     end
 
     def start_app
-      Dom {
-        Context.collection[Router.current_context].elements.each do |element|
-          div.
-        end
-      }.append_to($document.body)
-
+      Context.render(Router.current_context)
     end
   end
 end

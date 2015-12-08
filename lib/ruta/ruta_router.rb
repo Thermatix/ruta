@@ -18,8 +18,7 @@ module Ruta
 
     def map key,route, options={}
       raise "no handler present, please add one using 'to:'" unless options[:to]
-      raise "no context for given route" unless @current_context
-      Routes.add(ref,route,@current_context,options)
+      Routes.add(ref,route,@current_context || :no_context ,options)
     end
 
     def root context

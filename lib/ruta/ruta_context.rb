@@ -34,8 +34,37 @@ module Ruta
         @collection[context_name] = new(block)
       end
 
-      def render context
-        
+      def wipe element
+        if element
+          $document[element].clear
+        else
+          $document.body.clear
+        end
+      end
+
+      def render context, this=$document.body
+        context_to_render = @collection[context]
+        render_context_elements context_to_render, this
+        render_element_contents context_to_render,context
+      end
+
+      def render_context_elements context_to_render,this
+        context_to_render.elements.each do |element_name,details|
+          Dom {
+            div.send("#{element_name}!")
+          }.append_to this
+        end
+      end
+
+      def render_element_contents context_to_render,context
+        context_to_render.elements.each do |element_name,details|
+          object = details.content.call
+          if object.class == Symbol
+            render object,$document[context]
+          else
+            @render.call(,$document[element_name])
+          end
+        end
       end
     end
     @collection = {}

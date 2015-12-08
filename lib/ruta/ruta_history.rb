@@ -2,7 +2,6 @@
 module Ruta
   class History
     class << self
-
       def back by=1
         @history.back by
       end
