@@ -9,7 +9,7 @@ module Ruta
 
     OPTIONAL = /\\\((.*?)\\\)/
 
-     attr_reader :regexp, :named, :type, :handler
+     attr_reader :regexp, :named, :type, :handler, :url
 
      def initialize(pattern, flags)
 
@@ -23,7 +23,7 @@ module Ruta
          @type = :ref_only
        end
 
-
+       @url = pattern
        @named = []
 
 
@@ -45,10 +45,7 @@ module Ruta
          when :handler
            params = {}
            @named.each_with_index { |name, i| params[name] = match[i + 1] }
-           [Context.collection[current_context].
-                             handlers[@handler].
-                                        flatten.
-                           (&:call, params,path)
+           [Context.collection[current_context].handlers[@handler]].flatten.each(params,path,&:call)
            return true
          when :context
            Context.wipe

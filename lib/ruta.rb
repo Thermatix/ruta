@@ -7,6 +7,7 @@ if RUBY_ENGINE == 'opal'
   require 'ruta_context'
   require 'ruta_handler'
   require 'ruta_history'
+  require 'ruta_route'
   require 'ruta_routes'
   require 'ruta_router'
   require 'ruta_version'
@@ -34,7 +35,7 @@ if RUBY_ENGINE == 'opal'
 else
   require "ruta/ruta_version"
   require 'opal'
-
-  Opal.append_path File.expand_path('./', __FILE__)
-  Opal.append_path File.expand_path('./ruta/', __FILE__)
+  lib_path = File.dirname(File.expand_path('.', __FILE__))
+  Opal.append_path lib_path
+  Opal.append_path "#{lib_path}/ruta"
 end

@@ -18,6 +18,14 @@ module Ruta
         pos(context)[ref]
       end
 
+      def get_and_paramaterize ref,*params
+        route = get(ref).url.dup
+        segments = url.split('/')
+        path = '/' + segments.map { |item| item[0] == ':' ? params.shift : item }.join('/') + '/'
+        route[:path] = path
+        route
+      end
+
       private
       def pos pointer
         if @collection.empty?

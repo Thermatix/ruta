@@ -19,7 +19,7 @@ module Ruta
 
     def sub_context ref, context
       self.elements[ref] = {
-        content: Proc.new(context,{|context|Context.render context,context})
+        content: Proc.new {|context|Context.render context,context}
       }
     end
 
@@ -63,7 +63,7 @@ module Ruta
           if object.class == Symbol
             render object,$document[context]
           else
-            @render.call(,$document[element_name])
+            @render.call($document[element_name])
           end
         end
       end

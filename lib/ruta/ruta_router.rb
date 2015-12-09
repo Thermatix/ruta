@@ -3,7 +3,7 @@ module Ruta
 
   class Router
 
-    
+
     # TODO: ensure sub-context routes are mounted into parent context routes
     # re-build route matching
     attr_accessor :current_context, :inital_context, :routes
@@ -36,7 +36,7 @@ module Ruta
       end
 
       def set_initial context
-        @current_context context
+        @current_context = context
       end
 
       def get_fragment
@@ -60,7 +60,7 @@ module Ruta
       end
 
       def route ref,params
-        params ? Routes.get_and_paramaterize ref,*params : Routes.get ref
+        params ? Routes.get_and_paramaterize(ref,*params) : Routes.get(ref)
       end
 
       def current_uri
@@ -74,7 +74,7 @@ module Ruta
           if match
             if route[:handle]
             url = match.shift
-            [Context.collection[@current_context].handlers[route[:handle]]].flatten.(&:call, match,url)
+            [Context.collection[@current_context].handlers[route[:handle]]].flatten.(match,url,&:call)
             elsif route[:context]
               Context.wipe
               Context.render(route[:Context])
