@@ -85,9 +85,6 @@ module Ruta
         end
       end
 
-      def match
-
-      end
 
     end
 

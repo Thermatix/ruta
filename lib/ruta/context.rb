@@ -50,16 +50,21 @@ module Ruta
       end
       private
       def render_context_elements context_to_render,this
+        puts this
+        puts context_to_render
         context_to_render.elements.each do |element_name,details|
-          Dom {
+          a = Dom {
             div.send("#{element_name}!")
-          }.append_to this
+          }
+          puts a
+          a.append_to this
         end
       end
 
       def render_element_contents context_to_render,context
         context_to_render.elements.each do |element_name,details|
           object = details[:content].call
+          puts object
           if object.class == Symbol
             render object,$document[context]
           else

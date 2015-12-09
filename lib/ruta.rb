@@ -4,13 +4,13 @@ if RUBY_ENGINE == 'opal'
   require 'browser'
   require 'browser/history'
 
-  require 'ruta_context'
-  require 'ruta_handler'
-  require 'ruta_history'
-  require 'ruta_route'
-  require 'ruta_routes'
-  require 'ruta_router'
-  require 'ruta_version'
+  require 'ruta/context'
+  require 'ruta/handler'
+  require 'ruta/history'
+  require 'ruta/route'
+  require 'ruta/routes'
+  require 'ruta/router'
+  require 'ruta/version'
 
   module Ruta
     class << self
@@ -26,6 +26,7 @@ if RUBY_ENGINE == 'opal'
       end
 
       def start_app
+        puts starting app
         Context.render(Router.current_context)
       end
     end
@@ -33,7 +34,7 @@ if RUBY_ENGINE == 'opal'
 
 
 else
-  require "ruta/ruta_version"
+  require "ruta/version"
   require 'opal'
   lib_path = File.dirname(File.expand_path('.', __FILE__))
   Opal.append_path lib_path
