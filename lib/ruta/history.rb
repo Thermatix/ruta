@@ -18,7 +18,6 @@ module Ruta
         @history.pushState(data,page_name,path )
       end
     end
-    @history = Window.history
-
+    @history = Browser::Window.history
   end
 end
