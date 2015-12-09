@@ -1,5 +1,5 @@
 module Ruta
-  class Handler
+  class Handlers
 
     attr_reader :handles
     def handle handler_name,&handler
@@ -7,7 +7,7 @@ module Ruta
         @context.handlers[@handler_name] = handler
     end
 
-    def initialize context,&block
+    def initialize context,block
       @context = context
       instance_exec &block
     end

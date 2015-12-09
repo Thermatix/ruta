@@ -4,7 +4,7 @@ module Ruta
     attr_accessor :elements
     attr_accessor :handlers
 
-    def initialize &block
+    def initialize block
         @elements = {}
         @handlers = {}
         instance_exec &block
@@ -45,19 +45,17 @@ module Ruta
 
       def render context, this=$document.body
         context_to_render = @collection[context]
+        puts "rendering #{context} to #{this}"
+        puts @collection
         render_context_elements context_to_render, this
         render_element_contents context_to_render,context
       end
       private
       def render_context_elements context_to_render,this
-        puts this
-        puts context_to_render
         context_to_render.elements.each do |element_name,details|
-          a = Dom {
+          Dom {
             div.send("#{element_name}!")
-          }
-          puts a
-          a.append_to this
+          }.append_to this
         end
       end
 

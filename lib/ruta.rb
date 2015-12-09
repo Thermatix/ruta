@@ -26,7 +26,7 @@ if RUBY_ENGINE == 'opal'
       end
 
       def start_app
-        puts starting app
+        puts "current context is set to:#{Router.current_context}"
         Context.render(Router.current_context)
       end
     end
@@ -38,5 +38,4 @@ else
   require 'opal'
   lib_path = File.dirname(File.expand_path('.', __FILE__))
   Opal.append_path lib_path
-  Opal.append_path "#{lib_path}/ruta"
 end

@@ -40,6 +40,7 @@ module Ruta
      end
 
      def match(path,current_context)
+       puts "matching #{path}"
        if match = @regexp.match(path)
          case @type
          when :handler

@@ -18,6 +18,6 @@ module Ruta
         @history.pushState(data,page_name,path )
       end
     end
-    @history = Browser::Window.history
+    @history = Browser::History.new(`#@native.history`)
   end
 end
