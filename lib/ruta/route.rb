@@ -9,20 +9,20 @@ module Ruta
 
     OPTIONAL = /\\\((.*?)\\\)/
 
-     attr_reader :regexp, :named, :type, :handler, :url
+     attr_reader :regexp, :named, :type, :handlers, :url,:flags
 
      def initialize(pattern, flags)
 
        if flags[:to]
-         @type = :handler
-         @handler = flags[:to]
+         @type = :handlers
+         @handlers = [flags.delete :to].flatten
        elsif flags[:context]
          @type = :context
-         @handler = flags[:context]
+         @handlers = flags.delete :context
        else
          @type = :ref_only
        end
-
+       @flags = flags
        @url = pattern
        @named = []
 
@@ -37,6 +37,8 @@ module Ruta
        pattern = pattern.gsub SPLAT, "(.*?)"
 
        @regexp = Regexp.new "^#{pattern}$"
+       puts @named
+       puts @Regexp
      end
 
      def match(path,current_context)
@@ -50,7 +52,7 @@ module Ruta
            return true
          when :context
            Context.wipe
-           Context.render(@handler)
+           Context.render @handler
          end
         end
         false

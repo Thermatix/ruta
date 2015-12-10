@@ -18,11 +18,11 @@ if RUBY_ENGINE == 'opal'
         Router.route ref,params
       end
 
-      def navigate_to ref,*params
-        d = Router.data(params)
-        r = Router.route(ref,params)
-        History.add_to_history r[:path], r[:flags][:page_name],d
-        Router.get_handler_for get_fragment
+      def navigate_to_ref ref,*params
+        dat = Router.data(params)
+        res = Routes.get(ref,params)
+        Router.history.push(res[:path],dat)
+        res[:route].match(res[:path])
       end
 
       def start_app

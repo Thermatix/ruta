@@ -26,7 +26,7 @@ module Ruta
       Router.set_context_to context
     end
 
-
+    @history = Browser::Window.history
     class << self
       attr_reader :current_context,  :history
 
@@ -58,14 +58,23 @@ module Ruta
         end
       end
 
-      def route ref,params
-        params ? Routes.get_and_paramaterize(ref,*params) : Routes.get(ref)
+      def route ref,params=nil
+        Routes.get(ref,params)
       end
 
       def current_uri
        Window.location.uri
       end
-      # TODO need to see if this works, a it's based on pure JS
+
+      def execute_handlers_for res
+        # {
+        #     path: path,
+        #     page_name: route.flags[:page_name],
+        #     type: route.type,
+        #     handlers: route.handlers
+        # }
+      end
+
       def get_handler_for fragment
         Routes.collection[current_context].each do |ref,route|
           # match = `#{fragment}.match(#{route[:re]})`

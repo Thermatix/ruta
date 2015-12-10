@@ -64,7 +64,6 @@ module Ruta
         context_to_render.elements.each do |element_name,details|
           case details[:type]
           when :sub_context
-            puts "#{element_name}: #{$document[element_name]}"
             render details[:content],$document[element_name]
           when :element
             @render.call(details[:content].call,element_name)

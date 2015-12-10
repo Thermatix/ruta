@@ -14,19 +14,43 @@ module Ruta
         pos(context).delete(ref)
       end
 
-      def get context, ref
-        pos(context)[ref]
+      def get ref, params=nil
+        puts "mapping #{ref}"
+        puts @collection
+        # route = pos(context)[ref]
+        route = find(ref,@collection)
+        path = if params
+          paramaterize route.url.dup,params
+        else
+          route.url
+        end
+        {
+            path: path,
+            page_name: route.flags[:page_name],
+            route: route
+        }
       end
 
-      def get_and_paramaterize ref,*params
-        route = get(ref).url.dup
+      def paramaterize url, params
         segments = url.split('/')
-        path = '/' + segments.map { |item| item[0] == ':' ? params.shift : item }.join('/') + '/'
-        route[:path] = path
-        route
+        '/' + segments.map { |item| item[0] == ':' ? params.shift : item }.join('/') + '/'
       end
 
       private
+
+      def find ref,tree
+        tree.each do |segment_ref,segment|
+          if segment.respond_to? :flags
+            if ref == segment_ref
+              return segment
+            end
+          else
+            return find(ref,segment)
+          end
+        end
+        raise "#{ref} doesn't exist"
+      end
+
       def pos pointer
         if @collection.empty?
           @collection
