@@ -9,9 +9,9 @@ module Ruta
 
     OPTIONAL = /\\\((.*?)\\\)/
 
-     attr_reader :regexp, :named, :type, :handlers, :url,:flags
+     attr_reader :regexp, :named, :type, :handlers, :url,:flags, :param_keys
 
-     def initialize(pattern, flags)
+     def initialize(pattern, context_ref,flags)
 
        if flags[:to]
          @type = :handlers
@@ -22,11 +22,13 @@ module Ruta
        else
          @type = :ref_only
        end
+       @context_ref = context_ref
        @flags = flags
        @url = pattern
        @named = []
 
 
+       @param_keys = @url.split('/').select {|e| e[0] == ':' }.map {|e| e.gsub(/.{1}(.*)/,'\1')}
        pattern = Regexp.escape pattern
        pattern = pattern.gsub OPTIONAL, "(?:$1)?"
 
@@ -37,25 +39,52 @@ module Ruta
        pattern = pattern.gsub SPLAT, "(.*?)"
 
        @regexp = Regexp.new "^#{pattern}$"
-       puts @named
-       puts @Regexp
+     end
+
+     def paramaterize params
+       segments = @url.split('/')
+       '/' + segments.map { |item| item[0] == ':' ? params.shift : item }.join('/') + '/'
+     end
+
+     def get ref, params=nil
+       path = if params
+         paramaterize params
+       else
+         @url
+       end
+       {
+           url: path,
+           page_name: self.flags.fetch(:page_name){nil},
+           route: self
+       }
      end
 
      def match(path,current_context)
-       puts "matching #{path}"
        if match = @regexp.match(path)
-         case @type
-         when :handler
-           params = {}
-           @named.each_with_index { |name, i| params[name] = match[i + 1] }
-           [Context.collection[current_context].handlers[@handler]].flatten.each(params,path,&:call)
-           return true
-         when :context
-           Context.wipe
-           Context.render @handler
+         params = {}
+         @named.each_with_index { |name, i| params[name] = match[i + 1] } if @type == :handlers
+         {
+             url: path,
+             page_name: self.flags.fetch(:page_name),
+             params: params,
+             route: self
+         }
+       end
+       false
+     end
+
+     def execute_handler params={},path=nil
+       case @type
+       when :handlers
+         puts "mounted at: #{@context_ref.ref}"
+         @handlers.each do |handler_ident|
+           han = @context_ref.handlers.fetch(handler_ident) {raise "handler #{handler_ident} doesn't exists in context #{@context_ref.ref}"}
+           han.(Hash[@param_keys.zip(params)],path||@url,&:call)
          end
-        end
-        false
+       when :context
+         Context.wipe
+         Context.render handlers
+       end
      end
 
   end

@@ -5,7 +5,7 @@ module Ruta
 
 
     # TODO: ensure sub-context routes are mounted into parent context routes
-    attr_accessor :current_context, :inital_context, :routes
+    attr_accessor :current_context, :routes
     def initialize block
       @current_context = []
       @routes = {}
@@ -18,20 +18,31 @@ module Ruta
       @current_context.pop
     end
 
+    def get_context
+      @current_context.last || :no_context
+    end
+
     def map ref,route, options={}
-      Routes.add(ref,route,@current_context || [:no_context] ,options)
+      context = Context.collection[get_context]
+      context.routes[ref]= Route.new(route, context,options)
     end
 
     def root_to context
-      Router.set_context_to context
+      Router.set_root_to context
     end
 
-    @history = Browser::Window.history
+
+
     class << self
-      attr_reader :current_context,  :history
+      attr_reader :current_context, :history, :window, :root
 
       def define &block
         new block
+      end
+
+      def set_root_to context
+        @root = context
+        Router.set_context_to root
       end
 
       def set_context_to context
@@ -39,15 +50,15 @@ module Ruta
       end
 
       def get_fragment
-        Window.location.fragment
+        window.location.fragment
       end
 
       def get_query
-        Window.location.query
+        window.location.query
       end
 
       def get_current_path
-        Window.location.path
+        window.location.path
       end
 
       def data params
@@ -58,43 +69,27 @@ module Ruta
         end
       end
 
-      def route ref,params=nil
-        Routes.get(ref,params)
+      def route_for context, ref,params=nil
+        puts "context(#{context}):"
+        puts Context.collection[context]
+        puts "routes(#{ref}):"
+        puts Context.collection[context].routes
+        Context.collection[context].routes[ref].get(params)
       end
 
       def current_uri
-       Window.location.uri
+       window.location.uri
       end
+      private
+      def find attr, element
 
-      def execute_handlers_for res
-        # {
-        #     path: path,
-        #     page_name: route.flags[:page_name],
-        #     type: route.type,
-        #     handlers: route.handlers
-        # }
       end
-
-      def get_handler_for fragment
-        Routes.collection[current_context].each do |ref,route|
-          # match = `#{fragment}.match(#{route[:re]})`
-          match = fragment.match route[:re]
-          if match
-            if route[:handle]
-            url = match.shift
-            [Context.collection[@current_context].handlers[route[:handle]]].flatten.(match,url,&:call)
-            elsif route[:context]
-              Context.wipe
-              Context.render(route[:Context])
-            else
-              raise "trying to render non rendarable route(#{ref}) for fragment(#{fragment})"
-            end
-          end
-        end
-      end
-
-
     end
+
+    @window = Browser::Window.new
+    # puts `self["native"]`
+    # puts `self["native"].history`
+    # @history = window.history
 
   end
 end

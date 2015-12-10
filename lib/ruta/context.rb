@@ -1,12 +1,14 @@
 # stores contexts
 module Ruta
   class Context
-    attr_reader :elements
-    attr_accessor :handlers
+    attr_reader :elements, :ref
+    attr_accessor :handlers, :routes
     DOM = ::Kernel.method(:DOM)
-    def initialize block
+    def initialize ref,block
+        @ref = ref
         @elements = {}
         @handlers = {}
+        @routes = {}
         instance_exec &block
     end
 
@@ -26,7 +28,6 @@ module Ruta
       }
     end
 
-
     class << self
       attr_reader :collection, :render
 
@@ -34,8 +35,8 @@ module Ruta
         @render = block
       end
 
-      def define context_name, &block
-        @collection[context_name] = new(block)
+      def define ref, &block
+        @collection[ref] = new(ref,block)
       end
 
       def wipe element=nil
@@ -48,27 +49,29 @@ module Ruta
 
       def render context, this=$document.body
         context_to_render = @collection[context]
-        render_context_elements context_to_render, this
+        render_context_elements context_to_render,context, this
         render_element_contents context_to_render,context
       end
       private
-      def render_context_elements context_to_render,this
+      def render_context_elements context_to_render,context,this
         context_to_render.elements.each do |element_name,details|
           DOM {
-            div(details[:attributes].merge(id: element_name))
+            div(details[:attributes].merge(id: element_name, "data-context" => context))
           }.append_to(this)
         end
       end
 
       def render_element_contents context_to_render,context
+        Ruta.context = context
         context_to_render.elements.each do |element_name,details|
           case details[:type]
           when :sub_context
             render details[:content],$document[element_name]
           when :element
-            @render.call(details[:content].call,element_name)
+            @render.call(details[:content].call,element_name,context)
           end
         end
+        Ruta.context = :no_context
       end
     end
     @collection = {}
