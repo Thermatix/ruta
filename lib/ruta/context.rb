@@ -1,7 +1,7 @@
 # stores contexts
 module Ruta
   class Context
-    attr_accessor :elements
+    attr_reader :elements
     attr_accessor :handlers
     DOM = ::Kernel.method(:DOM)
     def initialize block
@@ -10,16 +10,19 @@ module Ruta
         instance_exec &block
     end
 
-    def element element_name,element_attribs, &block
-        self.elements[element_name] = {
-          attributes: element_attribs,
+    def element ref,attribs={}, &block
+        self.elements[ref] = {
+          attributes: attribs,
+          type: :element,
           content: block
         }
     end
 
-    def sub_context ref, context
+    def sub_context ref,context,attribs={}
       self.elements[ref] = {
-        content: Proc.new {|context|Context.render context,context}
+        attributes: attribs,
+        type: :sub_context,
+        content: context,
       }
     end
 
@@ -50,20 +53,21 @@ module Ruta
       end
       private
       def render_context_elements context_to_render,this
+        puts this
         context_to_render.elements.each do |element_name,details|
           DOM {
-            div.send("#{element_name}!")
+            div(details[:attributes].merge(id: element_name))
           }.append_to(this)
         end
       end
 
       def render_element_contents context_to_render,context
         context_to_render.elements.each do |element_name,details|
-          object = details[:content].call
-          if object.class == Symbol
-            render object,$document[context]
-          else
-            @render.call($document[element_name])
+          case details[:type]
+          when :sub_context
+            render details[:content],$document[context]
+          when :element
+            @render.call(details[:content].call,element_name)
           end
         end
       end
