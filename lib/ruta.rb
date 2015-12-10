@@ -26,7 +26,6 @@ if RUBY_ENGINE == 'opal'
       end
 
       def start_app
-        puts "current context is set to:#{Router.current_context}"
         Context.render(Router.current_context)
       end
     end

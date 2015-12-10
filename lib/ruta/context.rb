@@ -3,7 +3,7 @@ module Ruta
   class Context
     attr_accessor :elements
     attr_accessor :handlers
-
+    DOM = ::Kernel.method(:DOM)
     def initialize block
         @elements = {}
         @handlers = {}
@@ -45,24 +45,21 @@ module Ruta
 
       def render context, this=$document.body
         context_to_render = @collection[context]
-        puts "rendering #{context} to #{this}"
-        puts @collection
         render_context_elements context_to_render, this
         render_element_contents context_to_render,context
       end
       private
       def render_context_elements context_to_render,this
         context_to_render.elements.each do |element_name,details|
-          Dom {
+          DOM {
             div.send("#{element_name}!")
-          }.append_to this
+          }.append_to(this)
         end
       end
 
       def render_element_contents context_to_render,context
         context_to_render.elements.each do |element_name,details|
           object = details[:content].call
-          puts object
           if object.class == Symbol
             render object,$document[context]
           else

@@ -9,7 +9,6 @@ module Ruta
     def initialize block
       @current_context = []
       @routes = {}
-      puts block
       instance_exec &block
     end
 
@@ -20,12 +19,10 @@ module Ruta
     end
 
     def map ref,route, options={}
-      puts "mapping #{route} to #{ref}"
       Routes.add(ref,route,@current_context || [:no_context] ,options)
     end
 
     def root_to context
-      puts "setting root to: #{context}"
       Router.set_context_to context
     end
 
@@ -34,12 +31,10 @@ module Ruta
       attr_reader :current_context,  :history
 
       def define &block
-        puts 'defining a router'
-        new &block
+        new block
       end
 
       def set_context_to context
-        puts "setting context to: #{context}"
         @current_context = context
       end
 
