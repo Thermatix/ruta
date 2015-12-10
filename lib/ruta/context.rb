@@ -53,7 +53,6 @@ module Ruta
       end
       private
       def render_context_elements context_to_render,this
-        puts this
         context_to_render.elements.each do |element_name,details|
           DOM {
             div(details[:attributes].merge(id: element_name))
@@ -65,7 +64,8 @@ module Ruta
         context_to_render.elements.each do |element_name,details|
           case details[:type]
           when :sub_context
-            render details[:content],$document[context]
+            puts "#{element_name}: #{$document[element_name]}"
+            render details[:content],$document[element_name]
           when :element
             @render.call(details[:content].call,element_name)
           end
