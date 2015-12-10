@@ -7,7 +7,6 @@ if RUBY_ENGINE == 'opal'
   require 'ruta/context'
   require 'ruta/handler'
   require 'ruta/route'
-  require 'ruta/routes'
   require 'ruta/router'
   require 'ruta/version'
 

@@ -28,11 +28,12 @@ module Ruta
       }
     end
 
+
     class << self
-      attr_reader :collection, :render
+      attr_reader :collection,:renderer
 
       def handle_render &block
-        @render = block
+        @renderer = block
       end
 
       def define ref, &block
@@ -68,7 +69,7 @@ module Ruta
           when :sub_context
             render details[:content],$document[element_name]
           when :element
-            @render.call(details[:content].call,element_name,context)
+            @renderer.call(details[:content].call,element_name,context)
           end
         end
         Ruta.context = :no_context

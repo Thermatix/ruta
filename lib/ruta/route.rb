@@ -79,7 +79,9 @@ module Ruta
          puts "mounted at: #{@context_ref.ref}"
          @handlers.each do |handler_ident|
            han = @context_ref.handlers.fetch(handler_ident) {raise "handler #{handler_ident} doesn't exists in context #{@context_ref.ref}"}
-           han.(Hash[@param_keys.zip(params)],path||@url,&:call)
+           Context.wipe handler_ident
+           puts handler_ident
+           Context.renderer.call(han.(Hash[@param_keys.zip(params)],path||@url,&:call),handler_ident)
          end
        when :context
          Context.wipe
