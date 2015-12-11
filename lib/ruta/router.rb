@@ -70,10 +70,6 @@ module Ruta
       end
 
       def route_for context, ref,params=nil
-        puts "context(#{context}):"
-        puts Context.collection[context]
-        puts "routes(#{ref}):"
-        puts Context.collection[context].routes
         Context.collection[context].routes[ref].get(params)
       end
 
