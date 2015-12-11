@@ -76,15 +76,14 @@ module Ruta
      def execute_handler params={},path=nil
        case @type
        when :handlers
-         puts "mounted at: #{@context_ref.ref}"
          @handlers.each do |handler_ident|
            handler = @context_ref.handlers.fetch(handler_ident) {raise "handler #{handler_ident} doesn't exist in context #{@context_ref.ref}"}
-           Context.wipe handler_ident
-           puts handler_ident
            component = handler.(Hash[@param_keys.zip(params)],path||@url,&:call)
-          #  puts component.instance_variable_get(:@native)
-          #  component.append_to($document[handler_ident])
-           Context.renderer.call(component,handler_ident)
+           if component.class == Proc
+             component.call
+           else
+             Context.renderer.call(component,handler_ident)
+           end
          end
        when :context
          Context.wipe
