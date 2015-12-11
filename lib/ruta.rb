@@ -21,7 +21,7 @@ if RUBY_ENGINE == 'opal'
 
 
       def navigate_to_ref ref,*params
-        con = context
+        con = Context.current_context
         proc {
         dat = Router.data(params)
         res = Router.route_for(con,ref,params)
