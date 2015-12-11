@@ -84,7 +84,7 @@ module Ruta
            component = handler.(Hash[@param_keys.zip(params)],path||@url,&:call)
           #  puts component.instance_variable_get(:@native)
           #  component.append_to($document[handler_ident])
-           Context.renderer.call(component.call,handler_ident)
+           Context.renderer.call(component,handler_ident)
          end
        when :context
          Context.wipe
