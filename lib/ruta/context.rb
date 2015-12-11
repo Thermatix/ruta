@@ -18,6 +18,7 @@ module Ruta
     attr_accessor :handlers, :routes
     DOM = ::Kernel.method(:DOM)
 
+    # @see #Context#handle_render
     def initialize ref,block
         @ref = ref
         @elements = {}
@@ -31,6 +32,7 @@ module Ruta
     # @param [Symbol] id of element to mount element contents to
     # @param [{Symbol => String,Number,Boolean}] list of attributes to attach to tag
     # @yield block containing component to be rendered to page
+    # @yieldreturn [Object] a component that will be passed to the renderer to be rendered to the page
     def element id,attribs={}, &block
         self.elements[id] = {
           attributes: attribs,
@@ -39,11 +41,16 @@ module Ruta
         }
     end
 
-    def sub_context id,context,attribs={}
+    # mount a context as a sub context here
+    #
+    # @param [Symbol] id of component to mount context to
+    # @param [Symbol] ref of context to be mounted
+    # @param [{Symbol => String,Number,Boolean}] list of attributes to attach to tag
+    def sub_context id,ref,attribs={}
       self.elements[id] = {
         attributes: attribs,
         type: :sub_context,
-        content: context,
+        content: ref,
       }
     end
 
@@ -79,13 +86,13 @@ module Ruta
       # @example Define a composition for a context called :main
       #   Ruta::Context.define :main do
       #     element :header do
-      #       Header
+      #       #some code that returns a component
       #     end
       #
       #     sub_context :info, :info_view
       #
       #     element :footer do
-      #       Footer
+      #       #some code that returns a component
       #     end
       #   end
       # @param [Symbol] ref reference to the context being defined
@@ -125,7 +132,7 @@ module Ruta
       end
 
       def render_element_contents context_to_render,context
-        Context.current_context = context
+        @current_context = context
         context_to_render.elements.each do |element_name,details|
           case details[:type]
           when :sub_context
