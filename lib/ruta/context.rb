@@ -1,9 +1,23 @@
 # stores contexts
 module Ruta
   class Context
+
+    # @!attribute [r] elements
+    # @return [{ref => { attributes: {},type: Symbol, content: Proc,Symbol}] Hash of all elements defined
+
+    # @!attribute [r] ref
+    # @return [Symbol] this contexts reference in (see #Context#collection)
+
+    # @!attribute [r,w] handlers
+    # @return [{ref => Proc}] list of route handlers attached to this context
+
+    # @!attribute [r,w] routes
+    # @return [{ref => Route}] list of all routes attached to this context
+
     attr_reader :elements, :ref
     attr_accessor :handlers, :routes
     DOM = ::Kernel.method(:DOM)
+
     def initialize ref,block
         @ref = ref
         @elements = {}
@@ -12,16 +26,21 @@ module Ruta
         instance_exec &block
     end
 
-    def element ref,attribs={}, &block
-        self.elements[ref] = {
+    # an element of the composition
+    #
+    # @param [Symbol] id of element to mount element contents to
+    # @param [{Symbol => String,Number,Boolean}] list of attributes to attach to tag
+    # @yield block containing component to be rendered to page
+    def element id,attribs={}, &block
+        self.elements[id] = {
           attributes: attribs,
           type: :element,
           content: block
         }
     end
 
-    def sub_context ref,context,attribs={}
-      self.elements[ref] = {
+    def sub_context id,context,attribs={}
+      self.elements[id] = {
         attributes: attribs,
         type: :sub_context,
         content: context,
@@ -70,7 +89,7 @@ module Ruta
       #     end
       #   end
       # @param [Symbol] ref reference to the context being defined
-      # @yield a block of code that is used to define the composition of a context
+      # @yield a block that is used to define the composition of a context
       def define ref, &block
         @collection[ref] = new(ref,block)
       end
@@ -89,7 +108,7 @@ module Ruta
       # used to render a composition to the screen
       #
       # @param [Symbol] context the context to render
-      # @param  [String] id of element context is to be rendered to, if no id is provided will default to body tag
+      # @param  [String] id of element context is to be rendered to, if no id is provided will default to body tagt
       def render context, id=nil
         this = id ? $document[id]: $document.body
         context_to_render = @collection[context]

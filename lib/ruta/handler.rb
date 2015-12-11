@@ -12,7 +12,7 @@ module Ruta
       instance_exec &block
     end
 
-    # TODO:Move these functions to execution context?
+    # @todo Move these functions to execution context?
     def switch_sub_context_to context
       Context.wipe @handler_name
       Context.render context
