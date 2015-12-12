@@ -17,12 +17,12 @@ if RUBY_ENGINE == 'opal'
 
       # used to retrive a stored url
       #
-      # @param [Symbol] context of the stored url, if
+      # @param [Symbol] context of the stored url, if this is nil it defaults to the current context
       # @param [Symbol] reference to the route
       # @param [Array<String,Number,Boolean>] *params 0 or more params to replace params in the paramterized route
       # @return [String] string containing url with any params given correctly inserted
       def get_url_for context, reference, *params
-        Router.route( context, reference, params)[:path]
+        Router.route( context || Router.current_context, reference, params)[:path]
       end
 
       # returns a proc that is used in place of a callback block
@@ -45,11 +45,15 @@ if RUBY_ENGINE == 'opal'
       end
 
       # used to start the app
+      # @example app start command placed inside of $document.ready block
+      #   $document.ready do
+      #     Ruta.start_app
+      #   end
       def start_app
         Context.render(Router.current_context)
       end
     end
-    
+
   end
 
 

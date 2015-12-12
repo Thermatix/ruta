@@ -13,6 +13,7 @@ module Ruta
         @context.handlers[@handler_name] = handler
     end
 
+    # @see #Handlers#define_for
     def initialize context,block
       @context = context
       instance_exec &block

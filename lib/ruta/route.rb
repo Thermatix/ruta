@@ -79,11 +79,13 @@ module Ruta
          @handlers.each do |handler_ident|
            handler = @context_ref.handlers.fetch(handler_ident) {raise "handler #{handler_ident} doesn't exist in context #{@context_ref.ref}"}
            component = handler.(Hash[@param_keys.zip(params)],path||@url,&:call)
+           Context.context = @context_ref.ref
            if component.class == Proc
              component.call
            else
              Context.renderer.call(component,handler_ident)
            end
+           @Context = :no_context
          end
        when :context
          Context.wipe
