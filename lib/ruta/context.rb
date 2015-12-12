@@ -62,11 +62,12 @@ module Ruta
       # @!attribute [r] renderer
       # @return [Proc] the renderer used to render and or mount components on to the DOM
 
-      # @!attribute [r] current_context
+      # @!attribute [r,w] current_context
       # @return [Symbol] The reference to the current context being rendered
 
 
-      attr_reader :collection,:renderer, :current_context
+      attr_reader :collection,:renderer
+      attr_accessor :current_context
 
       # Used to tell the router how to render components to the DOM
       #
@@ -141,10 +142,10 @@ module Ruta
             @renderer.call(details[:content].call,element_name,context)
           end
         end
-        Ruta.context = :no_context
+        @current_context = :no_context
       end
     end
     @collection = {}
-    @Context = :no_context
+    @current_context = :no_context
   end
 end
