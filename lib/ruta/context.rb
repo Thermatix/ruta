@@ -145,5 +145,6 @@ module Ruta
       end
     end
     @collection = {}
+    @Context = :no_context
   end
 end
