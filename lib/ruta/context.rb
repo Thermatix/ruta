@@ -34,7 +34,7 @@ module Ruta
     # @param [{Symbol => String,Number,Boolean}] list of attributes to attach to tag
     # @yield block containing component to be rendered to page
     # @yieldreturn [Object] a component that will be passed to the renderer to be rendered to the page
-    def element id,attribs={}, &block
+    def component id,attribs={}, &block
         self.elements[id] = {
           attributes: attribs,
           type: :element,

@@ -28,7 +28,7 @@ A context is a composition of on screen component containers, routes and handler
 
 You can even place another context under a context as a sub-context
 
-`element` is used to define a container, you give it a name and then a block and inside of the block you
+`component` is used to define a container, you give it a name and then a block and inside of the block you
 place a renderable component.
 
 you can also use `sub_context` to mount a sub-context at this position, first you give it a name then
@@ -36,34 +36,34 @@ a reference to the context you wish to place here
 
 ```ruby
 Ruta::Context.define :main do
-  element :header do
+  component :header do
     Header
   end
 
   sub_context :info, :info_view
 
-  element :footer do
+  component :footer do
     Footer
   end
 end
 
 
 Ruta::Context.define :info_view do
-  element :hero do
+  component :hero do
     Hero_Image
   end
 
-  element :scroller do
+  component :scroller do
     Info_Scroller
   end
 
-  element :buttons do
+  component :buttons do
     Buttons
   end
 end
 
 Ruta::Context.define :sign_up do
-  element :sign_up_form do
+  component :sign_up_form do
     Sign_Up_Form
   end
 end
