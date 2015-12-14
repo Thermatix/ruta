@@ -28,11 +28,13 @@ A context is a composition of on screen component containers, routes and handler
 
 You can even place another context under a context as a sub-context
 
-`component` is used to define a container, you give it a name and then a block and inside of the block you
+`component` is used to define a container, you give it a name and then a block and inside of which you
 place a renderable component.
 
 you can also use `sub_context` to mount a sub-context at this position, first you give it a name then
-a reference to the context you wish to place here
+a reference to the context you wish to place here.
+
+This initial composition is used to as the default settings for when the context is first rendered
 
 ```ruby
 Ruta::Context.define :main do
@@ -71,7 +73,7 @@ end
 
 ###Handlers
 
-Next you should define some handlers, not every component needs a handler but every component that does
+Next you should define some handlers, not every component needs a handler but every component has one
 needs to match names with a corresponding handler.
 
 you use the `handle` method to define a handler and you pass into it the name of the element you want this
@@ -82,7 +84,7 @@ The handler has two variables passed to it:
 1. `params` a hash containing the named params of the route
 2. `url` a string containing the url of the route being passed to the handler
 
-The handler must return a renderable component
+The handler must return a renderable component.
 
 ```ruby
 Ruta::Handlers.define_for :main do
@@ -106,7 +108,7 @@ end
 
 ###Routes
 
-The last thing to define before your app is read is the routes that will activate the correct handlers to
+The last thing to define before your app is ready is the routes that will activate the correct handlers to
 drive onscreen components.
 
 Roots that drive on screen components should always be mounted to a context.
@@ -136,7 +138,7 @@ end
 
 ###Renderer
 
-The next step is to tell the router how to render your components.
+The last step is to tell the router how to render your components.
 
 You do this using `Ruta::Context.handle_render` and then creating a macro.
 Passed into the macro is the `component` you wish to render and the `element_id` of the components mounting
