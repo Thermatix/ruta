@@ -53,6 +53,7 @@ module Ruta
      pattern = pattern.gsub SPLAT, "(.*?)"
 
      @regexp = Regexp.new "^#{pattern}$"
+
     end
 
     #take in params and return a paramaterized route
@@ -93,17 +94,18 @@ module Ruta
     # @param [String,Regex] path to match against
     # @return [Hash,false] (see #get) or false if there is no match
     def match(path)
-     if match = @regexp.match(path)
-       params = {}
-       @named.each_with_index { |name, i| params[name] = match[i + 1] } if @type == :handlers
-       {
-           path: path,
-           title: self.flags.fetch(:title),
-           params: params_hash(params),
-           route: self
-       }
-     end
-     false
+       if match = @regexp.match(path)
+         params = {}
+         @named.each_with_index { |name, i| params[name] = match[i + 1] } if @type == :handlers
+         {
+             path: path,
+             title: self.flags.fetch(:title){nil},
+             params: params,
+             route: self
+         }
+       else
+         false
+       end
     end
 
     # execute's route's associated handlers

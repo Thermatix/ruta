@@ -38,9 +38,9 @@ if RUBY_ENGINE == 'opal'
       # @note you have to use this function as a proc direcly as in the example, if you place this into a callback block and call it there, you will find that the incorrect context is used for the route
       # @return [Proc] A proc that can be used as a callback block for an event
       def navigate_to_ref context, ref,*params
-        res = Router.route_for(context,ref,params)
-        History.push(res[:path],res[:params],res[:page_name])
-        res[:route].execute_handler res[:params],res[:path]
+        route = Router.route_for(context,ref,params)
+        History.push(route[:path],route[:params],route[:title])
+        Router.navigate_to(route)
       end
 
       # used to start the app
@@ -50,7 +50,7 @@ if RUBY_ENGINE == 'opal'
       #   end
       def start_app
         Context.render(Router.current_context)
-        History.listen
+        History.listen_for_pop
       end
     end
 

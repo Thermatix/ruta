@@ -15,7 +15,7 @@ module Ruta
     # @return [{ref => Route}] list of all routes attached to this context
 
     attr_reader :elements, :ref
-    attr_accessor :handlers, :routes
+    attr_accessor :handlers, :routes,:sub_contexts
     DOM = ::Kernel.method(:DOM)
 
     # @see #Context#handle_render
@@ -24,6 +24,7 @@ module Ruta
         @elements = {}
         @handlers = {}
         @routes = {}
+        @sub_contexts = []
         instance_exec &block
     end
 
@@ -47,6 +48,7 @@ module Ruta
     # @param [Symbol] ref of context to be mounted
     # @param [{Symbol => String,Number,Boolean}] list of attributes to attach to tag
     def sub_context id,ref,attribs={}
+      @sub_contexts << ref
       self.elements[id] = {
         attributes: attribs,
         type: :sub_context,

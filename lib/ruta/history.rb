@@ -3,10 +3,7 @@ module Ruta
 
   class History
     class << self
-
-      attr_reader :window,:history, :location
       def push(url,data,title=nil)
-        puts url
         `history.pushState(#{data.to_n}, #{title}, #{url})`
       end
 
@@ -23,35 +20,51 @@ module Ruta
         `history.go(#{-by.to_i})`
       end
 
-      def listen
 
-      end
+
 
       def navigate_to_remote path
-        location[:href] = path
+        `location.href = #{path}`
       end
 
-      def current thing
+      def location_of thing
 
         case thing
         when :query
-          location[:query]
+          `location.query`
         when :fragment
-          location[:fragment]
+        `  location.fragment`
         when :path
-          location[:pathname]
+          `location.pathname`
         when :url
-          location[:href]
+          `location.href`
         when :uri
-          location[:uri]
+          `location.uri`
         end
 
       end
+
+
+      def listen_for_pop
+        `window.onpopstate = function(event) {
+          #{
+              Router.find_and_execute(location_of :path)
+          }
+        }`
+      end
+
+      def listen_for_refresh_and_back
+        `window.onbeforeunload = function (evt) {
+          var message = 'Are you sure you want to leave?';
+         if (typeof evt == 'undefined') {
+           evt = window.event;
+         }
+         if (evt) {
+           evt.returnValue = message;
+         }
+         return message;
+        }`
+      end
     end
-
-    @window = Native(`window`)
-    @history = window[:History]
-    @location = window[:location]
   end
-
 end

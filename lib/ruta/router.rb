@@ -68,13 +68,29 @@ module Ruta
         @current_context = context
       end
 
-
-      def data params
-        if params.first.class == Hash
-          params.shift
+      def find_and_execute(path)
+        res = find(path)
+        puts "result:#{res}"
+        if res
+          navigate_to res
         else
-          {}
+          raise "no matching route for #{path}"
         end
+      end
+
+      def find path
+        Context.collection.each do |con_ref,context|
+          context.routes.each do |r_ref,route|
+            res = route.match(path)
+            return res if res
+          end
+        end
+        false
+      end
+
+      def navigate_to(route)
+        puts route
+        route[:route].execute_handler route[:params],route[:path]
       end
 
       def route_for context, ref,params=nil
