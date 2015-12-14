@@ -15,6 +15,7 @@ module Ruta
     attr_accessor :current_context
     def initialize block
       @current_context = []
+      Context.define(:no_context)
       instance_exec &block
     end
 
@@ -33,8 +34,10 @@ module Ruta
       context.routes[ref]= Route.new(route, context,options)
     end
 
-    def root_to context
-      Router.set_root_to context
+    def root_to ref
+      Router.set_root_to ref
+      context = Context.collection[:no_context]
+      context.routes[:root]= Route.new('/', context,{ context: ref})
     end
 
 

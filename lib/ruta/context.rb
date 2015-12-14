@@ -25,7 +25,7 @@ module Ruta
         @handlers = {}
         @routes = {}
         @sub_contexts = []
-        instance_exec &block
+        instance_exec &block if block
     end
 
     # an element of the composition
