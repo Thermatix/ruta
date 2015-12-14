@@ -61,7 +61,7 @@ module Ruta
     # @return [String] url containing named params replaced
     def paramaterize params
      segments = @url.split('/')
-     segments.map { |item| item[0] == ':' ? params.shift : item }.join('/') + '/'
+     segments.map { |item| item[0] == ':' ? params.shift : item }.join('/')
     end
 
     # get route hash and paramaterize url if needed
@@ -70,7 +70,7 @@ module Ruta
     # @return [Symbol => Number,String,Route] hash specificly formatted:
     #  {
     #    url: of the route with named params replaced,
-    #    page_name: the name of page if the url has one,
+    #    title: the name of page if the url has one,
     #    params: a list of all the params used in the route,
     #    route: the #Route object
     #  }
@@ -81,9 +81,9 @@ module Ruta
        @url
      end
      {
-         url: path,
-         page_name: self.flags.fetch(:page_name){nil},
-         params: params,
+         path: path,
+         title: self.flags.fetch(:title){nil},
+         params: params_hash(params),
          route: self
      }
     end
@@ -97,16 +97,16 @@ module Ruta
        params = {}
        @named.each_with_index { |name, i| params[name] = match[i + 1] } if @type == :handlers
        {
-           url: path,
-           page_name: self.flags.fetch(:page_name),
-           params: params,
+           path: path,
+           title: self.flags.fetch(:title),
+           params: params_hash(params),
            route: self
        }
      end
      false
     end
 
-    # execute's route's associated handlers 
+    # execute's route's associated handlers
     #
     # @param [Symbol => String] params from the route with there respective keys
     # @param [String] path containing params placed into there respective named positions
@@ -115,7 +115,7 @@ module Ruta
      when :handlers
        @handlers.each do |handler_ident|
          handler = @context_ref.handlers.fetch(handler_ident) {raise "handler #{handler_ident} doesn't exist in context #{@context_ref.ref}"}
-         component = handler.(Hash[@named.zip(params)],path||@url,&:call)
+         component = handler.(params,path||@url,&:call)
          Context.current_context = @context_ref.ref
          if component.class == Proc
            component.call
@@ -130,5 +130,8 @@ module Ruta
      end
     end
 
+    def params_hash(params)
+      Hash[@named.zip(params)]
+    end
   end
 end

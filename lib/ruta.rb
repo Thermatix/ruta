@@ -6,9 +6,11 @@ if RUBY_ENGINE == 'opal'
 
   require 'ruta/context'
   require 'ruta/handler'
+  require 'ruta/history'
   require 'ruta/route'
   require 'ruta/router'
   require 'ruta/version'
+
 
   module Ruta
     class << self
@@ -30,18 +32,15 @@ if RUBY_ENGINE == 'opal'
       #   button do
       #     button_name
       #   end.on(:click,&Ruta.navigate_to_ref(:i_switch,'some_value'))
-      # @param [Symbol] ref to a route that you wish to naviage to
+      # @param [Symbol] context that route is mounted to
+      # @param [Symbol] ref to a route that you wish to navigate to
       # @param [Array<String,Number,Boolean>] *params 0 or more params to replace params in the paramterized route
       # @note you have to use this function as a proc direcly as in the example, if you place this into a callback block and call it there, you will find that the incorrect context is used for the route
       # @return [Proc] A proc that can be used as a callback block for an event
-      def navigate_to_ref ref,*params
-        con = Context.current_context
-        proc {
-          dat = Router.data(params)
-          res = Router.route_for(con,ref,params)
-          # Router.history.push(res[:path],dat)
-          res[:route].execute_handler params,res[:path]
-        }
+      def navigate_to_ref context, ref,*params
+        res = Router.route_for(context,ref,params)
+        History.push(res[:path],res[:params],res[:page_name])
+        res[:route].execute_handler res[:params],res[:path]
       end
 
       # used to start the app
@@ -51,6 +50,7 @@ if RUBY_ENGINE == 'opal'
       #   end
       def start_app
         Context.render(Router.current_context)
+        History.listen
       end
     end
 

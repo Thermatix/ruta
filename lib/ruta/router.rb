@@ -4,11 +4,17 @@ module Ruta
   class Router
 
 
-    # TODO: ensure sub-context routes are mounted into parent context routes
-    attr_accessor :current_context, :routes
+    # @todo: ensure sub-context routes are mounted into parent context routes
+
+    # @!attribute [r,w] current_context
+    # @return [Array<Symbol>] current_context a list of contexts, the last being the current
+
+    # @!attribute [r,w] routes
+    # @return [{ref => Proc}] list of route handlers attached to this context
+
+    attr_accessor :current_context
     def initialize block
       @current_context = []
-      @routes = {}
       instance_exec &block
     end
 
@@ -34,7 +40,20 @@ module Ruta
 
 
     class << self
-      attr_reader :current_context, :history, :window, :root
+
+      # @!attribute [r] current_context
+      # @return [Array<Symbol>] current_context the current context that the user is in
+
+      # @!attribute [r] history
+      # @return [Array<Symbol>] history
+
+      # @!attribute [r] window
+      # @return [Array<Symbol>] window
+
+      # @!attribute [r] root
+      # @return [Array<Symbol>] root the initial context of the app
+
+      attr_reader :current_context, :root
 
       def define &block
         new block
@@ -49,17 +68,6 @@ module Ruta
         @current_context = context
       end
 
-      def get_fragment
-        window.location.fragment
-      end
-
-      def get_query
-        window.location.query
-      end
-
-      def get_current_path
-        window.location.path
-      end
 
       def data params
         if params.first.class == Hash
@@ -73,19 +81,7 @@ module Ruta
         Context.collection[context].routes[ref].get(params)
       end
 
-      def current_uri
-       window.location.uri
-      end
-      private
-      def find attr, element
-
-      end
     end
-
-    @window = Browser::Window.new
-    # puts `self["native"]`
-    # puts `self["native"].history`
-    # @history = window.history
 
   end
 end

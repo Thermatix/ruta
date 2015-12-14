@@ -6,23 +6,25 @@ module Ruta
 
       attr_reader :window,:history, :location
       def push(url,data,title=nil)
-        history.pushState(data, title, url)
+        puts url
+        `history.pushState(#{data.to_n}, #{title}, #{url})`
       end
 
       def replace(url,data,title=nil)
-        history.replaceState(data, title, url)
+        # history.replaceState(data, title, url)
+        `history.replaceState(#{data.to_n}, #{title}, #{url})`
       end
 
       def forward(by=1)
-        history.go(by.to_i)
+        `history.go(#{by.to_i})`
       end
 
       def back(by=1)
-        history.go(-by.to_i)
+        `history.go(#{-by.to_i})`
       end
 
       def listen
-        
+
       end
 
       def navigate_to_remote path
@@ -48,7 +50,7 @@ module Ruta
     end
 
     @window = Native(`window`)
-    @history =  window[:History]
+    @history = window[:History]
     @location = window[:location]
   end
 
