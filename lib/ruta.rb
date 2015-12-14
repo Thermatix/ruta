@@ -27,11 +27,7 @@ if RUBY_ENGINE == 'opal'
         Router.route( context || Router.current_context, reference, params)[:path]
       end
 
-      # returns a proc that is used in place of a callback block
-      # @example
-      #   button do
-      #     button_name
-      #   end.on(:click,&Ruta.navigate_to_ref(:i_switch,'some_value'))
+      # used to navigate to a route
       # @param [Symbol] context that route is mounted to
       # @param [Symbol] ref to a route that you wish to navigate to
       # @param [Array<String,Number,Boolean>] *params 0 or more params to replace params in the paramterized route
