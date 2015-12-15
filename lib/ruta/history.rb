@@ -43,17 +43,17 @@ module Ruta
         `location.href = #{path}`
       end
 
-      # get current `thing` from locaction
+      # get current `item` from locaction
       #
-      # current things supported are:
+      # current items supported are:
       #   * query
       #   * fragment
       #   * path
       #   * url
       #   * uri
-      # @param [Symbol] thing to get the current value of from the current location
-      def current thing
-        case thing
+      # @param [Symbol] item to get the current value of from the current location
+      def current item
+        case item
         when :query
           `location.query`
         when :fragment
@@ -92,13 +92,13 @@ module Ruta
       def listen_for_on_before_load
         `window.onbeforeunload = function (evt) {
           var message = 'Are you sure you want to leave?';
-         if (typeof evt == 'undefined') {
+          if (typeof evt == 'undefined') {
            evt = window.event;
-         }
-         if (evt) {
+          }
+          if (evt) {
            evt.returnValue = message;
-         }
-         return message;
+          }
+          return message;
         }`
       end
     end

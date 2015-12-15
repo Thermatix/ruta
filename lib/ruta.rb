@@ -18,7 +18,7 @@ if RUBY_ENGINE == 'opal'
 
 
 
-      # used to retrive a stored url
+      # used to retrieve a stored url
       #
       # @param [Symbol] context of the stored url, if this is nil it defaults to the current context
       # @param [Symbol] reference to the route
@@ -32,7 +32,6 @@ if RUBY_ENGINE == 'opal'
       # @param [Symbol] context that route is mounted to
       # @param [Symbol] ref to a route that you wish to navigate to
       # @param [Array<String,Number,Boolean>] *params 0 or more params to replace params in the paramterized route
-      # @note you have to use this function as a proc direcly as in the example, if you place this into a callback block and call it there, you will find that the incorrect context is used for the route
       # @return [Proc] A proc that can be used as a callback block for an event
       def navigate_to_ref context, ref,*params
         route = Router.route_for(context,ref,params)
@@ -41,7 +40,7 @@ if RUBY_ENGINE == 'opal'
       end
 
       # used to start the app
-      # @example app start command placed inside of $document.ready block
+      # @example start command placed inside of $document.ready block
       #   $document.ready do
       #     Ruta.start_app
       #   end

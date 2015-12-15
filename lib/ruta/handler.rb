@@ -22,7 +22,6 @@ module Ruta
     # wipe the matching element and render a context
     #
     # @param [Symbol] context context to be mounted to matching element of handler
-    # @todo Move these functions to execution context?
     # @return [Proc] returns a proc to be executed later
     def mount context
       handler_name = @handler_name
@@ -36,14 +35,14 @@ module Ruta
       # define handlers for a context
       #
       # @example
-      # Ruta::Handlers.define_for :main do
-      #  handler :header do |params,url|
-      #   some code that process the params and returns a component
-      #  end
-      #  handler :header do |params,url|
-      #   some code that process the params and returns a component
-      #  end
-      # end
+      #   Ruta::Handlers.define_for :main do
+      #    handler :header do |params,url|
+      #     some code that process the params and returns a component
+      #    end
+      #    handler :footer do |params,url|
+      #     some code that process the params and returns a component
+      #    end
+      #   end
       # @param [Symbol] context to define handlers for
       # @yield block containing handlers for a context
       def define_for context, &block

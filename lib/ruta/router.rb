@@ -4,7 +4,7 @@ module Ruta
   class Router
 
 
-    # @todo: ensure sub-context routes are mounted into parent context routes
+    
 
     # @!attribute [r,w] current_context
     # @return [Array<Symbol>] current_context a list of contexts, the last being the current

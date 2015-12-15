@@ -28,7 +28,7 @@ module Ruta
         instance_exec &block if block
     end
 
-    # an element of the composition
+    # define a component of the composition
     #
     # @param [Symbol] id of element to mount element contents to
     # @param [{Symbol => String,Number,Boolean}] list of attributes to attach to tag
@@ -104,7 +104,7 @@ module Ruta
         @collection[ref] = new(ref,block)
       end
 
-      # used to wipe clear an elementt's content
+      # used to wipe clear an element's content
       #
       # @param [String] id of element to be cleared, if no id is provided will clear body tag of content
       def wipe id=nil
