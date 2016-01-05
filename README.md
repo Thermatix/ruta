@@ -155,7 +155,22 @@ Ruta::Context.handle_render do |component,element_id|
 end
 ```
 
-###starting the app
+###Navigating your app
+
+Navigating your app is super duper easy.
+All you have to do is this
+
+```ruby
+Ruta.navigate_to_ref(:info_view,:i_switch,value)
+```
+The first arg is the context the route you wish to navigate to is located in, the second is the
+reference of the route, lastly any params you wish to place into the route go next, they are placed into the route as they come.
+
+You would most probably use it in a 'click' callback in response to the user clicking on somthing
+
+
+
+###Starting the app
 
 The last step is to start the router and thus your app this can be accomplished by using `Ruta.start_app`;
 it's best to wrap this inside of a `$document.ready` block so that the app will only start when the dom is

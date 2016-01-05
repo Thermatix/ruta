@@ -1,5 +1,5 @@
-# @todo: Ensure sub-context routes are mounted into parent context routes
-# @todo: Allow empty components to be exists and ensure they are only rendered when they are not blank
+# @todo: allow contexts to be mounted to roots
+# @todo: Allow empty components to exists and ensure they are only rendered when they are not blank
 
 if RUBY_ENGINE == 'opal'
   require 'browser'
