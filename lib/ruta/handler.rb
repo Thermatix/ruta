@@ -27,7 +27,7 @@ module Ruta
       handler_name = @handler_name
       proc {
         Context.wipe handler_name
-        Context.render context
+        Context.render context, handler_name
       }
     end
 
