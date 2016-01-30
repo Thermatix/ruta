@@ -46,6 +46,7 @@ if RUBY_ENGINE == 'opal'
       #   end
       def start_app
         Context.render(Router.current_context)
+        Router.find_and_execute(History.current :path)
         History.listen_for_pop
       end
     end

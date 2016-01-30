@@ -4,7 +4,7 @@ module Ruta
   class Router
 
 
-    
+
 
     # @!attribute [r,w] current_context
     # @return [Array<Symbol>] current_context a list of contexts, the last being the current
@@ -108,6 +108,7 @@ module Ruta
         end
         false
       end
+
 
       def navigate_to(route)
         route[:route].execute_handler route[:params],route[:path]
