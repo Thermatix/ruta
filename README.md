@@ -1,5 +1,18 @@
 # Ruta
 
+##TODO
+### Patch
+
+
+### Minor
+1. Route Prefixing  (configurable [on/off])
+  1. Routes for a context should be pre-fixed by there respective context
+  2. Switching context should change the url to just be the context prefix
+2. `default` action inside of handler
+  1. Using `default` inside of a handler should get the initial state of a component
+
+### Major
+
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -76,15 +89,23 @@ end
 Next you should define some handlers, not every component needs a handler but every component has one
 needs to match names with a corresponding handler.
 
-you use the `handle` method to define a handler and you pass into it the name of the element you want this
+you use the `handle` macro to define a handler and you pass into it the name of the element you want this
 handler to drive.
+
+You can also however render a sub-context instead of a component, just use:
+
+```ruby
+handle :component do |params,url|
+  mount :sub_context
+end
+```
 
 The handler has two variables passed to it:
 
 1. `params` a hash containing the named params of the route
 2. `url` a string containing the url of the route being passed to the handler
 
-The handler must return a renderable component.
+The handler must return a renderable component or mount a sub-context.
 
 ```ruby
 Ruta::Handlers.define_for :main do
@@ -138,9 +159,9 @@ end
 
 ###Renderer
 
-The last step is to tell the router how to render your components.
+The penultimate step is to tell the router how to render your components.
 
-You do this using `Ruta::Context.handle_render` and then creating a macro.
+You do this using `Ruta::Context.handle_render` and then define the render macro.
 Passed into the macro is the `component` you wish to render and the `element_id` of the components mounting
 point.
 
@@ -163,7 +184,7 @@ All you have to do is this
 ```ruby
 Ruta.navigate_to_ref(:info_view,:i_switch,value)
 ```
-The first arg is the context the route you wish to navigate to is located in, the second is the
+The first arg is the context of the route you wish to navigate to is located in, the second is the
 reference of the route, lastly any params you wish to place into the route go next, they are placed into the route as they come.
 
 You would most probably use it in a 'click' callback in response to the user clicking on somthing
