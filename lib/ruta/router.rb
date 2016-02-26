@@ -91,7 +91,7 @@ module Ruta
       def find_and_execute(path)
         path =
         if Ruta.config.context_prefix
-          path == '/' ? '/' : path[/[^\/.*]\/.*/][1...path.length]
+          path == '/' || path == "" ? path : path[/[^\/.*]\/.*/][1...path.length]
         else
           path
         end
