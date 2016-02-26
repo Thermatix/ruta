@@ -79,8 +79,6 @@ module Ruta
       #     root_to :main
       #   end
       # @note please be aware that placing contexts within other contexts doesn't actully do anything.
-      #   however it is planed to be able to mount sub contexts to a route and re-direct as neccasary
-      #   think mounting engines or sub apps in RoR or Padrino
       # @yield Use this block to define any routes
       def define &block
         new block
