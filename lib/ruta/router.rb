@@ -15,7 +15,7 @@ module Ruta
     def initialize block
       @current_context = []
       Context.define(:no_context)
-      instance_exec &block
+      instance_exec(&block)
     end
 
     # set which Context to map the following routes to
