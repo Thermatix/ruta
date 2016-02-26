@@ -51,7 +51,6 @@ if RUBY_ENGINE == 'opal'
       # @param [Symbol] context that route is mounted to
       # @param [Symbol] ref to a route that you wish to navigate to
       # @param [Array<String,Number,Boolean>] *params 0 or more params to replace params in the paramterized route
-      # @return [Proc] A proc that can be used as a callback block for an event
       def navigate_to_ref context, ref,*params
         route = Router.route_for(context,ref,params)
         History.push(context,route[:path],route[:params],route[:title])
