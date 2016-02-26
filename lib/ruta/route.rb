@@ -129,6 +129,7 @@ module Ruta
      when :context
        Context.wipe
        Context.render handlers
+       History.push(@context_ref.ref,"/",[],@context_ref.ref)
      end
     end
 
