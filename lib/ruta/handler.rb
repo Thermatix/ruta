@@ -16,7 +16,7 @@ module Ruta
     # @see #Handlers#define_for
     def initialize context,block
       @context = context
-      instance_exec &block
+      instance_exec(&block)
     end
 
     # wipe the matching element and render a context
