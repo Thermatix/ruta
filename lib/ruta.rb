@@ -18,6 +18,7 @@ if RUBY_ENGINE == 'opal'
       attr_accessor :context_prefix
       def initialize &block
         @context_prefix = false
+        block_given?
         instance_exec(self,&block) if block_given?
       end
 
@@ -66,7 +67,7 @@ if RUBY_ENGINE == 'opal'
         if block_given?
           configure(&block)
         else
-          configure(proc {})
+          configure unless self.config
         end
         Context.render(Router.current_context)
         Router.find_and_execute(History.current :path)
