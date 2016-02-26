@@ -40,7 +40,7 @@ module Ruta
     # @param [Symbol] reference to context
     def root_to reference
       Router.set_root_to reference
-      context = Context.collection[:no_context]
+      context = Context.collection[reference]
       context.routes[:root]= Route.new('/', context,{ context: reference})
     end
 
@@ -91,6 +91,12 @@ module Ruta
       end
 
       def find_and_execute(path)
+        path =
+        if Ruta.config.context_prefix
+          path == '/' ? '/' : path[/[^\/.*]\/.*/][1...path.length]
+        else
+          path
+        end
         res = find(path)
         if res
           navigate_to res
