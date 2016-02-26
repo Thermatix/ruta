@@ -31,7 +31,7 @@ module Ruta
 
      if flags[:to]
        @type = :handlers
-       @handlers = [flags.delete :to].flatten
+       @handlers = [flags.delete(:to)].flatten
      elsif flags[:context]
        @type = :context
        @handlers = flags.delete :context
