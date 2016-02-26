@@ -14,10 +14,28 @@ if RUBY_ENGINE == 'opal'
 
 
   module Ruta
+    class Config
+      attr_accessor :context_prefix
+      def initialize &block
+        @context_prefix = false
+        instance_exec(self,&block) if block_given?
+      end
+
+      def configure &block
+        instance_exec(&block)
+      end
+    end
+
     class << self
+      attr_reader :config
 
-
-
+      def configure &block
+        if self.config
+          @config.configure(&block)
+        else
+          @config = Config.new(&block)
+        end
+      end
       # used to retrieve a stored url
       #
       # @param [Symbol] context of the stored url, if this is nil it defaults to the current context
@@ -35,7 +53,7 @@ if RUBY_ENGINE == 'opal'
       # @return [Proc] A proc that can be used as a callback block for an event
       def navigate_to_ref context, ref,*params
         route = Router.route_for(context,ref,params)
-        History.push(route[:path],route[:params],route[:title])
+        History.push(context,route[:path],route[:params],route[:title])
         Router.navigate_to(route)
       end
 
@@ -44,7 +62,12 @@ if RUBY_ENGINE == 'opal'
       #   $document.ready do
       #     Ruta.start_app
       #   end
-      def start_app
+      def start_app &block
+        if block_given?
+          configure(&block)
+        else
+          configure(proc {})
+        end
         Context.render(Router.current_context)
         Router.find_and_execute(History.current :path)
         History.listen_for_pop
