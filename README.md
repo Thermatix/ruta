@@ -5,11 +5,6 @@
 
 
 ### Minor
-1. Route Prefixing  (configurable [on/off])
-  1. Routes for a context should be pre-fixed by there respective context
-  2. Switching context should change the url to just be the context prefix
-2. `default` action inside of handler
-  1. Using `default` inside of a handler should get the initial state of a component
 
 ### Major
 
@@ -30,6 +25,24 @@ Or install it yourself as:
     $ gem install ruta
 
 ## Usage
+
+##config settings
+
+To configure Ruta's settings you can use a config block
+
+Here's a config block with Ruta's default settings
+```ruby
+Ruta.configure do |config|
+  config.context_prefix = false
+end
+```
+
+The following settings have the following effects:
+1. `context_prefix`
+  This setting turns on context prefixing, whenever you navigate to a route
+  the context it's located in is pre-fixed to the front of it, navigating to
+  a context with this turned on will set the url to being just the context name
+
 
 Making use of this router is pretty simple.
 
@@ -126,6 +139,9 @@ Ruta::Handlers.define_for :sign_up do
 
 end
 ```
+
+You can use `default` inside of a handler to render the component in the default state
+as it is defined in the context.
 
 ###Routes
 

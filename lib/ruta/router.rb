@@ -15,7 +15,7 @@ module Ruta
     def initialize block
       @current_context = []
       Context.define(:no_context)
-      instance_exec &block
+      instance_exec(&block)
     end
 
     # set which Context to map the following routes to
@@ -40,7 +40,7 @@ module Ruta
     # @param [Symbol] reference to context
     def root_to reference
       Router.set_root_to reference
-      context = Context.collection[:no_context]
+      context = Context.collection[reference]
       context.routes[:root]= Route.new('/', context,{ context: reference})
     end
 
@@ -79,8 +79,6 @@ module Ruta
       #     root_to :main
       #   end
       # @note please be aware that placing contexts within other contexts doesn't actully do anything.
-      #   however it is planed to be able to mount sub contexts to a route and re-direct as neccasary
-      #   think mounting engines or sub apps in RoR or Padrino
       # @yield Use this block to define any routes
       def define &block
         new block
@@ -91,6 +89,12 @@ module Ruta
       end
 
       def find_and_execute(path)
+        path =
+        if Ruta.config.context_prefix
+        (  path == '/' || path == "") ? path : (path[/(?:\/.*?)(\/.*)/];$1)
+        else
+          path
+        end
         res = find(path)
         if res
           navigate_to res

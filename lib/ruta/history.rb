@@ -9,7 +9,8 @@ module Ruta
       # @param [String] url to be added to history
       # @param [Hash] data to be added to history
       # @param [String] title to be added to history, defaults to ""
-      def push(url,data,title="")
+      def push(context,url,data,title="")
+        url = Ruta.config.context_prefix ?  "/#{context}#{url}" : url
         `history.pushState(#{data.to_n}, #{title}, #{url})`
       end
 

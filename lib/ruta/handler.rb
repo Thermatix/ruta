@@ -16,18 +16,32 @@ module Ruta
     # @see #Handlers#define_for
     def initialize context,block
       @context = context
-      instance_exec &block
+      instance_exec(&block)
     end
 
     # wipe the matching element and render a context
     #
     # @param [Symbol] context context to be mounted to matching element of handler
-    # @return [Proc] returns a proc to be executed later
     def mount context
       handler_name = @handler_name
       proc {
         Context.wipe handler_name
         Context.render context, handler_name
+      }
+    end
+
+    # Render the default content for this component as it is defined in the context.
+    #
+    def default
+      handler_name = @handler_name
+      proc {
+        comp = @context.elements[handler_name][:content]
+        if comp.kind_of?(Proc)
+          comp.call
+        else
+          Context.wipe handler_name
+          Context.render comp, handler_name
+        end
       }
     end
 
