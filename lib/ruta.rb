@@ -53,7 +53,7 @@ if RUBY_ENGINE == 'opal'
       # @param [Array<String,Number,Boolean>] *params 0 or more params to replace params in the paramterized route
       def navigate_to_ref context, ref,*params
         route = Router.route_for(context,ref,params)
-        History.push(context,route[:path],route[:params],route[:title]) unless route.type == :context
+        History.push(context,route[:path],route[:params],route[:title]) unless route[:route].type == :context
         route[:route].execute_handler route[:params],route[:path]
       end
 
