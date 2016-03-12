@@ -5,6 +5,10 @@
 
 
 ### Minor
+1. Conditional Routes
+    Routes that can only be accessed when a condition is met
+2. queries
+    Being able to use query style params
 
 ### Major
 
