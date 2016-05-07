@@ -88,7 +88,8 @@ module Ruta
         @current_context = context
       end
 
-      def find_and_execute(path)
+      def find_and_execute(url)
+        path,query_string = url.split('?')
         path =
         if Ruta.config.context_prefix
         (  path == '/' || path == "") ? path : (path[/(?:\/.*?)(\/.*)/];$1)
@@ -97,7 +98,7 @@ module Ruta
         end
         res = find(path)
         if res
-          navigate_to res
+          navigate_to res,query_string.split('&').map('=',&:split).inject({}){|hash,el| hash[el.first] = el.last}
         else
           raise "no matching route for #{path}"
         end
@@ -114,8 +115,8 @@ module Ruta
       end
 
 
-      def navigate_to(route)
-        route[:route].execute_handler route[:params],route[:path]
+      def navigate_to(route,queries={})
+        route[:route].execute_handler route[:params].merge(queries),route[:path]
       end
 
       def route_for context, ref,params=nil
